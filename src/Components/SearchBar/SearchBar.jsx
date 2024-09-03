@@ -1,24 +1,40 @@
-import React, { useState } from "react";
-import { IoSearch } from "react-icons/io5";
+import React, { useState, useContext } from 'react';
+import { BsSearch } from 'react-icons/bs';
 
-import './SearchBar.css'
+import './SearchBar.css';
+import fetchProducts from '../../Api/FetchProducts';
+import AppContext from '../../Context/AppContext';
 
 function SearchBar() {
 
+  const { setProducts, setLoading } = useContext(AppContext);
   const [searchValue, setSearchValue] = useState('');
 
-  return ( 
-    <form className="search_bar">
-      <input 
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+
+    const products = await fetchProducts(searchValue);
+
+    setProducts(products);
+    setLoading(false);
+    setSearchValue('');
+  };
+
+  return (
+    <form className="search-bar" onSubmit={handleSearch}>
+      {name}
+      <input
         type="search"
+        value={searchValue}
         placeholder="Buscar produtos"
-        className="search_input"
-        onChange={ ({ target }) => setSearchValue(target.value)}
+        className="search__input"
+        onChange={ ({ target }) => setSearchValue(target.value) }
         required
       />
-      { searchValue }
-      <button type="submit" className="search_button">
-        <IoSearch />
+
+      <button type="submit" className="search__button">
+        <BsSearch />
       </button>
     </form>
   );
